@@ -19,6 +19,9 @@ EXPERIMENT_NAME="rnn_comparison_${TIMESTAMP}"
 
 # Ensure clean environment
 module purge
+module load anaconda3
+
+conda activate .venv/
 
 # Set environment variables
 export MPLBACKEND=Agg  # Force matplotlib to use the 'Agg' backend without X11
@@ -29,15 +32,15 @@ echo "Experiment name: ${EXPERIMENT_NAME}"
 
 # Verify installation
 echo "Verifying installation..."
-.venv/bin/python -c "import seaborn; print('Seaborn successfully installed')"
+python -c "import matplotlib; matplotlib.use('Agg'); from matplotlib import pyplot as plt; print('Matplotlib-base successfully installed')"
 if [ $? -ne 0 ]; then
-    echo "ERROR: Failed to install or import seaborn"
+    echo "ERROR: Failed to install or import matplotlib-base"
     exit 1
 fi
 
 # Run the experiment
 echo "Starting experiment..."
-.venv/bin/python main.py \
+python main.py \
     --experiment-name ${EXPERIMENT_NAME} \
     --scheduler slurm
 

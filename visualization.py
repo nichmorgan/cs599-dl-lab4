@@ -1,32 +1,27 @@
 """
-Visualization functions for plotting training results with seaborn.
+Visualization functions for plotting training results with minimal dependencies.
+Uses matplotlib-base only to avoid GLIBCXX version conflicts on clusters.
 """
 
 import os
 import sys
 import numpy as np
 
-# Try to import seaborn with minimal matplotlib dependencies
+# Import matplotlib with Agg backend (no GUI required)
 try:
-    import seaborn as sns
-    from matplotlib import pyplot as plt
-    # Force the Agg backend which doesn't require X11
     import matplotlib
-    matplotlib.use('Agg')
-    # Set seaborn styling
-    sns.set(style="whitegrid", context="paper", font_scale=1.2)
+    matplotlib.use('Agg')  # Set before importing pyplot
+    from matplotlib import pyplot as plt
 except ImportError as e:
-    print("ERROR: Required visualization libraries are not available.")
+    print("ERROR: matplotlib-base is required for visualization.")
     print(f"Import error: {e}")
-    print("Visualization capabilities are essential for this experiment.")
-    print("Please install the required packages:")
-    print("  pip install seaborn")
-    print("Terminating execution.")
+    print("Please install matplotlib-base:")
+    print("  conda install -c conda-forge matplotlib-base")
     sys.exit(1)  # Exit with error code
 
 def plot_training_results(histories, model_names, save_path=None):
     """
-    Plot training and test accuracy/loss for different models using seaborn
+    Plot training and test accuracy/loss for different models
     
     Args:
         histories: List of training histories
@@ -42,8 +37,8 @@ def plot_training_results(histories, model_names, save_path=None):
     ax1 = axes[0]
     for i, history in enumerate(histories):
         epochs = range(1, len(history['train_accuracy']) + 1)
-        sns.lineplot(x=epochs, y=history['train_accuracy'], label=f'{model_names[i]} Train', ax=ax1)
-        sns.lineplot(x=epochs, y=history['test_accuracy'], label=f'{model_names[i]} Test', ax=ax1, linestyle='--')
+        ax1.plot(epochs, history['train_accuracy'], 'o-', label=f'{model_names[i]} Train')
+        ax1.plot(epochs, history['test_accuracy'], 's--', label=f'{model_names[i]} Test')
     
     ax1.set_title('Model Accuracy', fontweight='bold')
     ax1.set_ylabel('Accuracy')
@@ -57,8 +52,8 @@ def plot_training_results(histories, model_names, save_path=None):
         epochs = range(1, len(history['train_accuracy']) + 1)
         train_error = [1.0 - acc for acc in history['train_accuracy']]
         test_error = [1.0 - acc for acc in history['test_accuracy']]
-        sns.lineplot(x=epochs, y=train_error, label=f'{model_names[i]} Train', ax=ax2)
-        sns.lineplot(x=epochs, y=test_error, label=f'{model_names[i]} Test', ax=ax2, linestyle='--')
+        ax2.plot(epochs, train_error, 'o-', label=f'{model_names[i]} Train')
+        ax2.plot(epochs, test_error, 's--', label=f'{model_names[i]} Test')
     
     ax2.set_title('Model Error', fontweight='bold')
     ax2.set_ylabel('Error Rate')
@@ -70,8 +65,8 @@ def plot_training_results(histories, model_names, save_path=None):
     ax3 = axes[2]
     for i, history in enumerate(histories):
         epochs = range(1, len(history['train_loss']) + 1)
-        sns.lineplot(x=epochs, y=history['train_loss'], label=f'{model_names[i]} Train', ax=ax3)
-        sns.lineplot(x=epochs, y=history['test_loss'], label=f'{model_names[i]} Test', ax=ax3, linestyle='--')
+        ax3.plot(epochs, history['train_loss'], 'o-', label=f'{model_names[i]} Train')
+        ax3.plot(epochs, history['test_loss'], 's--', label=f'{model_names[i]} Test')
     
     ax3.set_title('Model Loss', fontweight='bold')
     ax3.set_ylabel('Loss')
@@ -90,7 +85,7 @@ def plot_training_results(histories, model_names, save_path=None):
 
 def plot_comparison_bars(results, save_path=None):
     """
-    Create bar charts comparing different models using seaborn
+    Create bar charts comparing different models
     
     Args:
         results: Dictionary with model names as keys and (accuracy, error, time) tuples as values
@@ -103,41 +98,34 @@ def plot_comparison_bars(results, save_path=None):
     
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
     
-    # Plot accuracy/error bars
-    performance_data = []
-    for i, name in enumerate(model_names):
-        performance_data.append({"Model": name, "Metric": "Accuracy", "Value": accuracies[i]})
-        performance_data.append({"Model": name, "Metric": "Error", "Value": errors[i]})
+    # Plot accuracy bars
+    x = np.arange(len(model_names))
+    width = 0.35
     
-    # Convert to long-form data for seaborn
-    performance_df = {"Model": [], "Metric": [], "Value": []}
-    for item in performance_data:
-        performance_df["Model"].append(item["Model"])
-        performance_df["Metric"].append(item["Metric"])
-        performance_df["Value"].append(item["Value"])
+    ax1.bar(x - width/2, accuracies, width, label='Accuracy')
+    ax1.bar(x + width/2, errors, width, label='Error')
     
-    # Plot with seaborn
-    sns.barplot(x="Model", y="Value", hue="Metric", data=performance_df, ax=ax1)
+    ax1.set_xlabel('Model')
     ax1.set_ylabel('Rate')
     ax1.set_title('Model Performance', fontweight='bold')
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(model_names)
+    ax1.legend()
     ax1.grid(True, axis='y')
     
     # Add value labels on bars
-    bars = ax1.patches
-    for i, bar in enumerate(bars):
-        height = bar.get_height()
-        ax1.text(
-            bar.get_x() + bar.get_width()/2.,
-            height + 0.01,
-            f"{height:.3f}",
-            ha="center", va="bottom"
-        )
+    for i, v in enumerate(accuracies):
+        ax1.text(i - width/2, v + 0.01, f"{v:.3f}", ha='center')
+    for i, v in enumerate(errors):
+        ax1.text(i + width/2, v + 0.01, f"{v:.3f}", ha='center')
     
     # Plot training time bars
-    time_data = {"Model": model_names, "Time": times}
-    sns.barplot(x="Model", y="Time", data=time_data, color="green", ax=ax2)
+    ax2.bar(x, times, color="green")
+    ax2.set_xlabel('Model')
     ax2.set_ylabel('Training Time (seconds)')
     ax2.set_title('Training Time', fontweight='bold')
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(model_names)
     ax2.grid(True, axis='y')
     
     # Add value labels on time bars

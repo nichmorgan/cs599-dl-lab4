@@ -11,10 +11,9 @@ import datetime
 import json
 import time
 import itertools
-from pathlib import Path
 
 import dask
-from dask.distributed import Client, LocalCluster, wait
+from dask.distributed import Client, LocalCluster
 from dask_jobqueue import SLURMCluster
 import numpy as np
 import tensorflow as tf
@@ -23,8 +22,6 @@ import tensorflow as tf
 dask.config.set({"distributed.diagnostics.progress": False})
 
 from data_loader import load_notmnist_data, preprocess_data
-from models import create_model
-from training import train_model
 from visualization import plot_training_results, plot_comparison_bars
 from experiment import run_single_configuration
 
