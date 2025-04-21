@@ -8,22 +8,35 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=16GB
 
+set -e  # Exit immediately if a command exits with a non-zero status
+
 mkdir -p slurm_output
 mkdir -p experiments
+mkdir -p $HOME/.local/lib/python3.11/site-packages  # Ensure local install directory exists
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 EXPERIMENT_NAME="rnn_comparison_${TIMESTAMP}"
 
+# Ensure clean environment
 module purge
-module load cuda
-module load glib
+
+# Set environment variables
+export MPLBACKEND=Agg  # Force matplotlib to use the 'Agg' backend without X11
+export TF_CPP_MIN_LOG_LEVEL=2  # Reduce TensorFlow logging noise
 
 echo "Starting RNN cell experiments at $(date)"
 echo "Experiment name: ${EXPERIMENT_NAME}"
 
-echo "Starting RNN cell experiments at $(date)"
-echo "Experiment name: ${EXPERIMENT_NAME}"
+# Verify installation
+echo "Verifying installation..."
+.venv/bin/python -c "import seaborn; print('Seaborn successfully installed')"
+if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to install or import seaborn"
+    exit 1
+fi
 
+# Run the experiment
+echo "Starting experiment..."
 .venv/bin/python main.py \
     --experiment-name ${EXPERIMENT_NAME} \
     --scheduler slurm
