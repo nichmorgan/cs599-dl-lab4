@@ -12,7 +12,6 @@ set -e  # Exit immediately if a command exits with a non-zero status
 
 mkdir -p slurm_output
 mkdir -p experiments
-mkdir -p $HOME/.local/lib/python3.11/site-packages  # Ensure local install directory exists
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 EXPERIMENT_NAME="rnn_comparison_${TIMESTAMP}"
