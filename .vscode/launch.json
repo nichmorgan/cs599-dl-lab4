@@ -1,0 +1,87 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Main (Local)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": [
+                "--scheduler", "local",
+                "--workers", "2",
+                "--model-types", "gru",
+                "--hidden-units", "128",
+                "--epochs", "2",
+                "--trials", "1",
+                "--log-interval", "5"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Python: Main (SLURM)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": [
+                "--scheduler", "slurm",
+                "--slurm-account", "cs599_dl",
+                "--model-types", "gru", "mgu",
+                "--hidden-units", "128", "256",
+                "--epochs", "10",
+                "--trials", "3"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Python: Single Config (Testing)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": [
+                "--scheduler", "local",
+                "--workers", "1",
+                "--model-types", "gru",
+                "--hidden-units", "128",
+                "--epochs", "1",
+                "--trials", "1",
+                "--log-interval", "1",
+                "--experiment-name", "debug_run"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Python: Data Loader Test",
+            "type": "python",
+            "request": "launch",
+            "module": "data_loader",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}
