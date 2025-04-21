@@ -28,7 +28,6 @@
             "program": "${workspaceFolder}/main.py",
             "args": [
                 "--scheduler", "slurm",
-                "--slurm-account", "cs599_dl",
                 "--model-types", "gru", "mgu",
                 "--hidden-units", "128", "256",
                 "--epochs", "10",

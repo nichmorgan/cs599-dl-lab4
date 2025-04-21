@@ -71,10 +71,6 @@ def parse_args():
                         help="Memory per SLURM task (default: 16GB)")
     parser.add_argument("--slurm-time", type=str, default="08:00:00",
                         help="Time limit per SLURM task (default: 08:00:00)")
-    parser.add_argument("--slurm-account", type=str, default="mcn97",
-                        help="SLURM account (default: mcn97)")
-    parser.add_argument("--slurm-partition", type=str, default="standard",
-                        help="SLURM partition (default: standard)")
     
     return parser.parse_args()
 
@@ -86,16 +82,14 @@ def setup_dask_client(args):
         cluster = LocalCluster(n_workers=args.workers, threads_per_worker=1)
         client = Client(cluster)
     else:  # slurm
-        print(f"Setting up SLURM Dask cluster on partition {args.slurm_partition}...")
+        print(f"Setting up SLURM Dask cluster...")
         cluster = SLURMCluster(
-            queue=args.slurm_partition,
-            account=args.slurm_account,
             cores=args.slurm_cpus,
             memory=args.slurm_mem,
             walltime=args.slurm_time,
             log_directory="dask_logs",
             local_directory="dask_local",
-            job_extra=[
+            job_extra_directives=[
                 "--output=dask_logs/slurm-%j.out", 
                 "--error=dask_logs/slurm-%j.err"
             ],

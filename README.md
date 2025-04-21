@@ -43,7 +43,7 @@ python main.py --scheduler local --workers 4
 To run experiments on a SLURM-based HPC cluster like Monsoon:
 
 ```bash
-python main.py --scheduler slurm --slurm-account cs599_dl --slurm-partition standard
+python main.py --scheduler slurm
 ```
 
 #### Customizing Configurations
@@ -83,8 +83,6 @@ The `main.py` script accepts the following arguments:
 - `--slurm-cpus`: CPUs per SLURM task (default: 8)
 - `--slurm-mem`: Memory per SLURM task (default: 16GB)
 - `--slurm-time`: Time limit per SLURM task (default: 08:00:00)
-- `--slurm-account`: SLURM account (default: cs599_dl)
-- `--slurm-partition`: SLURM partition (default: standard)
 
 ## Debugging in VSCode
 
@@ -142,5 +140,7 @@ s_t = (1 - f_t) ⊙ s_{t-1} + f_t ⊙ s~_t
 ## References
 
 1. Cho, K., Van Merriënboer, B., Bahdanau, D., and Bengio, Y. On the properties of neural machine translation: Encoder-decoder approaches. arXiv preprint arXiv:1409.1259 (2014).
+
+2. Zhou, G., Wu, J., Zhang, C., and Zhou, Z. Minimal gated unit for recurrent neural networks. CoRR abs/1603.09420 (2016).es. arXiv preprint arXiv:1409.1259 (2014).
 
 2. Zhou, G., Wu, J., Zhang, C., and Zhou, Z. Minimal gated unit for recurrent neural networks. CoRR abs/1603.09420 (2016).

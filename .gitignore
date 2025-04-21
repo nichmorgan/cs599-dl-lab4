@@ -28,7 +28,7 @@ env/
 venv/
 ENV/
 .env
-.venv
+.venv/
 
 # Jupyter Notebook checkpoint files
 .ipynb_checkpoints/
@@ -43,3 +43,9 @@ ENV/
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# logs
+dask_logs/
+dask_local/
+experiments/
+slurm_output/
