@@ -71,8 +71,8 @@ def parse_args():
                         help="Memory per SLURM task (default: 16GB)")
     parser.add_argument("--slurm-time", type=str, default="08:00:00",
                         help="Time limit per SLURM task (default: 08:00:00)")
-    parser.add_argument("--slurm-account", type=str, default="cs599_dl",
-                        help="SLURM account (default: cs599_dl)")
+    parser.add_argument("--slurm-account", type=str, default="mcn97",
+                        help="SLURM account (default: mcn97)")
     parser.add_argument("--slurm-partition", type=str, default="standard",
                         help="SLURM partition (default: standard)")
     
