@@ -37,7 +37,7 @@ def parse_args():
                         help="Directory to save experiment results (default: experiments)")
     
     # Model configuration
-    parser.add_argument("--model-types", type=str, nargs="+", default=["gru", "mgu"],
+    parser.add_argument("--model-types", type=str, nargs="+", default=["gru", "mgu", "lstm"],
                         choices=["gru", "mgu", "lstm"], 
                         help="Model types to evaluate (default: gru mgu)")
     parser.add_argument("--hidden-units", type=int, nargs="+", default=[128, 256],
@@ -60,12 +60,12 @@ def parse_args():
     # Dask configuration
     parser.add_argument("--scheduler", type=str, default="local", choices=["local", "slurm"],
                         help="Dask scheduler to use (default: local)")
-    parser.add_argument("--workers", type=int, default=4,
-                        help="Number of workers for local scheduler (default: 4)")
-    parser.add_argument("--slurm-cpus", type=int, default=8,
-                        help="CPUs per SLURM task (default: 8)")
-    parser.add_argument("--slurm-mem", type=str, default="16GB",
-                        help="Memory per SLURM task (default: 16GB)")
+    parser.add_argument("--workers", type=int, default=16,
+                        help="Number of workers for local scheduler (default: 16)")
+    parser.add_argument("--slurm-cpus", type=int, default=24,
+                        help="CPUs per SLURM task (default: 24)")
+    parser.add_argument("--slurm-mem", type=str, default="128GB",
+                        help="Memory per SLURM task (default: 128GB)")
     parser.add_argument("--slurm-time", type=str, default="08:00:00",
                         help="Time limit per SLURM task (default: 08:00:00)")
     

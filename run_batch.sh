@@ -2,11 +2,11 @@
 #SBATCH --job-name=cs599_rnn_experiments_runner
 #SBATCH --output=slurm_output/cs599_rnn_exp_runner_%j.out
 #SBATCH --error=slurm_output/cs599_rnn_exp_runner_%j.err
-#SBATCH --time=12:00:00
+#SBATCH --time=48:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=16GB
+#SBATCH --cpus-per-task=24
+#SBATCH --mem=128GB
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
@@ -41,7 +41,8 @@ fi
 echo "Starting experiment..."
 python main.py \
     --experiment-name ${EXPERIMENT_NAME} \
-    --scheduler slurm
+    --scheduler slurm \
+    --slurm-time "48:00:00"
 
 if [ $? -ne 0 ]; then
     echo "Error: The main experiment script failed"
